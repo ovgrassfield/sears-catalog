@@ -791,6 +791,11 @@ function updateCompareUI(){
   document.getElementById('cmpCount').textContent=n;
   document.getElementById('goCmpBtn').disabled=n<2;
   if(currentMode==='compare') renderCompare();
+  // Mobile badge
+  const badge=document.getElementById('mobCmpBadge');
+  if(badge) badge.textContent=n>0?`Порівняння (${n})`:'Порівняння';
+  const mobCmpBtn=document.getElementById('mobNavCompare');
+  if(mobCmpBtn) mobCmpBtn.classList.toggle('cmp-active',n>0);
 }
 
 function renderCompare(){
@@ -1191,17 +1196,6 @@ function mobSetMode(mode){
   if(activeBtn){
     activeBtn.classList.add(mode==='compare'?'cmp-active':'active');
   }
-}
-
-// Patch updateCompareUI to also update mobile badge
-const _origUpdateCompareUI=updateCompareUI;
-function updateCompareUI(){
-  _origUpdateCompareUI();
-  const n=compareList.length;
-  const badge=document.getElementById('mobCmpBadge');
-  if(badge) badge.textContent=n>0?`Порівняння (${n})`:'Порівняння';
-  const mobCmpBtn=document.getElementById('mobNavCompare');
-  if(mobCmpBtn) mobCmpBtn.classList.toggle('cmp-active',n>0);
 }
 
 // Touch swipe to close filter drawer
