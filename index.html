@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-W3DTTLLJEL"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -136,6 +136,15 @@ canvas.mini-radar{display:block;}
 .pc-add:hover{border-color:var(--a);color:var(--a);background:rgba(0,229,201,.08);}
 .pc-add.added{border-color:var(--a);color:var(--a);background:rgba(0,229,201,.12);}
 
+/* Price & stock row */
+.pc-commerce{padding:6px 14px 8px;display:flex;align-items:center;justify-content:space-between;gap:6px;border-top:1px solid var(--br);}
+.pc-price{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.5px;color:var(--tx);line-height:1;}
+.pc-price-sub{font-size:.5rem;color:var(--tx3);letter-spacing:.5px;font-family:'Syne',sans-serif;font-weight:400;}
+.pc-stock{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:.58rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;}
+.pc-stock.yes{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);color:#10b981;}
+.pc-stock.no{background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:#fb923c;}
+.pc-stock-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
 /* List mode card */
 .cards-grid.list .pcard{display:flex;align-items:center;}
 .cards-grid.list .pc-head{width:140px;flex-shrink:0;border-right:1px solid var(--br);}
@@ -145,6 +154,7 @@ canvas.mini-radar{display:block;}
 .cards-grid.list .pc-specs{flex:1;grid-template-columns:repeat(4,1fr);}
 .cards-grid.list .pc-tags{flex:0 0 180px;}
 .cards-grid.list .pc-foot{flex-shrink:0;border-top:none;border-left:1px solid var(--br);}
+.cards-grid.list .pc-commerce{flex-shrink:0;border-top:none;border-left:1px solid var(--br);flex-direction:column;align-items:flex-start;padding:8px 14px;}
 .cards-grid.list .pcard::after{top:0;left:0;right:auto;bottom:0;width:2px;height:auto;}
 
 /* ─ COMPARE VIEW ─ */
@@ -242,7 +252,7 @@ canvas.mini-radar{display:block;}
 .sidebar{transition:transform .3s ease;}
 
 /* Mobile FAB for filters */
-.mob-filter-fab{display:none;position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);right:20px;z-index:250;width:52px;height:52px;border-radius:50%;background:var(--a);border:none;color:#000;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 20px rgba(0,229,201,.4);align-items:center;justify-content:center;}
+.mob-filter-fab{display:none;position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 80px);right:20px;z-index:250;width:52px;height:52px;border-radius:50%;background:var(--a);border:none;color:#000;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 20px rgba(0,229,201,.4);align-items:center;justify-content:center;}
 
 /* Mobile bottom nav tabs */
 .mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(6,8,12,.95);border-top:1px solid var(--br);padding:8px 0 calc(env(safe-area-inset-bottom,0px) + 8px);backdrop-filter:blur(14px);}
@@ -317,6 +327,9 @@ canvas.mini-radar{display:block;}
   .pc-spec-v{font-size:.66rem;}
   .pc-tags{padding:0 10px 8px;gap:3px;}
   .pc-tag{font-size:.52rem;padding:2px 5px;}
+  .pc-commerce{padding:5px 10px 6px;}
+  .pc-price{font-size:1rem;}
+  .pc-stock{font-size:.54rem;padding:2px 6px;}
   .pc-foot{padding:6px 10px;}
   .pc-app{font-size:.56rem;}
 
@@ -371,6 +384,36 @@ canvas.mini-radar{display:block;}
   .cards-grid{grid-template-columns:1fr 1fr;}
   .pc-radar{display:none;}
 }
+
+/* ─ DUAL RANGE SLIDER ─ */
+.dual-range-wrap{position:relative;padding:10px 4px 4px;user-select:none;}
+.dual-range-track{position:relative;height:4px;background:var(--br3);border-radius:2px;margin:0 2px;}
+.dual-range-fill{position:absolute;height:100%;background:var(--a);border-radius:2px;pointer-events:none;}
+.dual-range-wrap input[type=range]{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:calc(100% + 16px);left:-8px;
+  -webkit-appearance:none;appearance:none;
+  background:transparent;pointer-events:none;
+  height:20px;margin:0;padding:0;
+}
+.dual-range-wrap input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--a);border:2px solid var(--bg);
+  box-shadow:0 0 0 1px var(--a),0 2px 8px rgba(0,229,201,.35);
+  pointer-events:all;cursor:grab;transition:transform .12s,box-shadow .12s;
+}
+.dual-range-wrap input[type=range]::-webkit-slider-thumb:active{
+  cursor:grabbing;transform:scale(1.18);
+  box-shadow:0 0 0 3px rgba(0,229,201,.25),0 2px 12px rgba(0,229,201,.5);
+}
+.dual-range-wrap input[type=range]::-moz-range-thumb{
+  width:18px;height:18px;border-radius:50%;
+  background:var(--a);border:2px solid var(--bg);
+  box-shadow:0 0 0 1px var(--a);pointer-events:all;cursor:grab;
+}
+.price-range-labels{display:flex;justify-content:space-between;margin-top:8px;gap:4px;}
+.price-range-val{font-size:.68rem;font-weight:600;color:var(--tx);background:var(--s2);border:1px solid var(--br2);border-radius:5px;padding:3px 7px;min-width:0;text-align:center;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 </style>
 </head>
 <body>
@@ -388,7 +431,7 @@ canvas.mini-radar{display:block;}
   <div class="cmp-counter">
     <span id="cmpCountLbl">Порівняння:</span>
     <span class="cmp-count" id="cmpCount">0</span><span style="color:var(--tx3);font-size:.7rem">/4</span>
-    <button class="cmp-btn" id="goCmpBtn" disabled onclick="setMode('compare',document.querySelectorAll('.mode-tab')[1])">Порівняти →</button>
+    <button class="cmp-btn" id="goCmpBtn" disabled onclick="mobSetMode('compare')">Порівняти →</button>
   </div>
 </header>
 
@@ -470,6 +513,29 @@ canvas.mini-radar{display:block;}
   </div>
 
   <button class="reset-btn" onclick="resetFilters()">↺ Скинути фільтри</button>
+
+  <div class="sb-section">
+    <div class="sb-lbl">Ціна, ₴</div>
+    <div class="dual-range-wrap" id="priceRangeWrap">
+      <div class="dual-range-track">
+        <div class="dual-range-fill" id="priceRangeFill"></div>
+      </div>
+      <input type="range" id="priceMin" min="4200" max="300000" step="100" value="4200" oninput="syncPriceSliders()">
+      <input type="range" id="priceMax" min="4200" max="300000" step="100" value="48500" oninput="syncPriceSliders()">
+    </div>
+    <div class="price-range-labels">
+      <span class="price-range-val" id="priceLblMin">4 200 ₴</span>
+      <span class="price-range-val" id="priceLblMax">48 500 ₴</span>
+    </div>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-lbl">Наявність</div>
+    <div class="fgroup">
+      <label class="fchk"><input type="checkbox" id="filterInStock" onchange="applyFilters()"><div class="fchk-dot" style="background:#10b981"></div><span class="fchk-lbl">В наявності</span></label>
+      <label class="fchk"><input type="checkbox" id="filterOnOrder" onchange="applyFilters()"><div class="fchk-dot" style="background:#fb923c"></div><span class="fchk-lbl">Під замовлення</span></label>
+    </div>
+  </div>
 </aside>
 
 <!-- MAIN -->
@@ -478,9 +544,12 @@ canvas.mini-radar{display:block;}
   <div id="catalogView">
     <div class="cat-toolbar">
       <div class="cat-info">Показано: <span id="visibleCount">36</span> моделей</div>
-      <select class="sort-sel" onchange="applyFilters()">
+      <select class="sort-sel" id="sortSel" onchange="applyFilters()">
         <option value="tier">Сортувати: рівень ↑</option>
         <option value="tier-desc">Рівень ↓</option>
+        <option value="price">Ціна ↑</option>
+        <option value="price-desc">Ціна ↓</option>
+        <option value="stock">В наявності першими</option>
         <option value="stroke">Хід підвіски ↑</option>
         <option value="stroke-desc">Хід підвіски ↓</option>
         <option value="series">Серія А-Я</option>
@@ -534,42 +603,44 @@ canvas.mini-radar{display:block;}
 // DATA
 // ═══════════════════════════════════════════
 const SEATS=[
-    {id:'s01',series:'606',pn:'SA20455',tier:1,tierName:'Базовий',color:'#475569',susp:'mech',suspLabel:'Механічна',stroke:108,weight:[45,150],slide:152,features:{backRecline:false,lumbar:false,armrests:false,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Компактна техніка',desc:'Оновлена підвіска за сидінням зі зниженим SIP.',radar:{stroke:2,comfort:1,tech:1,adjustability:2,health:2,features:1}},
-  {id:'s02',series:'706',pn:'SA20491',tier:1,tierName:'Базовий',color:'#475569',susp:'mech',suspLabel:'Механічна',stroke:108,weight:[45,150],slide:152,features:{backRecline:false,lumbar:false,armrests:false,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Компактна техніка',desc:'Знижений SIP, покращена геометрія пружини.',radar:{stroke:2,comfort:1,tech:1,adjustability:2,health:2,features:1}},
-  {id:'s03',series:'608',pn:'SA20453',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,features:{backRecline:false,lumbar:false,armrests:false,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Малий трактор',desc:'Компактна механічна підвіска, надійна сталева рама.',radar:{stroke:3,comfort:2,tech:2,adjustability:2,health:3,features:1}},
-  {id:'s04',series:'708',pn:'SA20489',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,features:{backRecline:false,lumbar:false,armrests:false,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Малий трактор',desc:'Ергономічна одноцілісна подушка.',radar:{stroke:3,comfort:2,tech:2,adjustability:2,health:3,features:1}},
-  {id:'s05',series:'908',pn:'SA22276',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Середній трактор',desc:'З відкидними підлокітниками.',radar:{stroke:3,comfort:3,tech:2,adjustability:3,health:3,features:2}},
-  {id:'s06',series:'908',pn:'SA20459.400',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'Fabriform',app:'Середній трактор',desc:'Fabriform подушки.',radar:{stroke:3,comfort:3,tech:2,adjustability:3,health:3,features:2}},
-  {id:'s07',series:'930',pn:'SA20442',tier:3,tierName:'Середній',color:'#0f766e',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Компактна техніка',desc:'Compact Air — відмінне гасіння вібрацій.',radar:{stroke:3,comfort:4,tech:4,adjustability:3,health:4,features:2}},
-  {id:'s08',series:'930',pn:'SA20442.400',tier:3,tierName:'Середній',color:'#0f766e',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'Fabriform',app:'Компактна техніка',desc:'Fabriform + Compact Air.',radar:{stroke:3,comfort:4,tech:4,adjustability:3,health:4,features:2}},
-  {id:'s09',series:'930+',pn:'SA26410.400',tier:3,tierName:'Середній',color:'#0f766e',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'Fabriform',app:'Компактна техніка',desc:'З ізолятором перед/зад.',radar:{stroke:3,comfort:4,tech:5,adjustability:3,health:5,features:3}},
-  {id:'s10',series:'3008',pn:'SA20464.100',tier:3,tierName:'Середній',color:'#0f766e',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'PVC',app:'Середній трактор',desc:'Нахил спинки та поперекова підтримка.',radar:{stroke:3,comfort:4,tech:3,adjustability:4,health:4,features:4}},
-  {id:'s11',series:'3008',pn:'SA24121.400',tier:3,tierName:'Середній',color:'#0f766e',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Середній трактор',desc:'Fabriform + нахил + поперекова.',radar:{stroke:3,comfort:5,tech:3,adjustability:4,health:4,features:4}},
-  {id:'s12',series:'3008+',pn:'SA20464.102',tier:3,tierName:'Середній',color:'#0f766e',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Середній трактор',desc:'+ Ізолятор перед/зад.',radar:{stroke:3,comfort:5,tech:4,adjustability:4,health:5,features:4}},
-  {id:'s13',series:'3030',pn:'SA20465.100',tier:4,tierName:'Просунутий',color:'#6d28d9',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'PVC',app:'Середній трактор',desc:'Air підвіска + нахил + поперекова.',radar:{stroke:3,comfort:5,tech:5,adjustability:5,health:5,features:4}},
-  {id:'s14',series:'3030',pn:'SA24122.400',tier:4,tierName:'Просунутий',color:'#6d28d9',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Середній трактор',desc:'Fabriform + Air + нахил + поперекова.',radar:{stroke:3,comfort:6,tech:5,adjustability:5,health:5,features:4}},
-  {id:'s15',series:'3030+',pn:'SA25496.400',tier:4,tierName:'Просунутий',color:'#6d28d9',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Середній трактор',desc:'+ Ізолятор перед/зад.',radar:{stroke:3,comfort:6,tech:6,adjustability:5,health:6,features:5}},
-  {id:'s16',series:'D3030',pn:'SA26467.400',tier:4,tierName:'Просунутий',color:'#6d28d9',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Середній трактор',desc:'Deluxe: Поворот 20°, рег. верхня спинка.',radar:{stroke:3,comfort:7,tech:6,adjustability:6,health:6,features:5}},
-  {id:'s17',series:'3045',pn:'SA24119.400',tier:4,tierName:'Просунутий',color:'#6d28d9',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:152,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Мала/середня техніка',desc:'LNF Air 156мм — топ для малої техніки.',radar:{stroke:7,comfort:6,tech:7,adjustability:6,health:7,features:6}},
-  {id:'s18',series:'3045',pn:'SA24117.400',tier:4,tierName:'Просунутий',color:'#6d28d9',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:152,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Мала/середня техніка',desc:'+ Поворот 20°/20°.',radar:{stroke:7,comfort:7,tech:7,adjustability:7,health:7,features:6}},
-  {id:'s19',series:'D3045',pn:'SA24118.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:152,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Мала/середня техніка',desc:'Deluxe: авто рег., датчик.',radar:{stroke:7,comfort:8,tech:8,adjustability:8,health:7,features:8}},
-  {id:'s20',series:'5545',pn:'SA30580.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Великий трактор',desc:'Поворот 24°, 200мм слайд, авто рег.',radar:{stroke:7,comfort:7,tech:8,adjustability:8,health:7,features:7}},
-  {id:'s21',series:'5545',pn:'SA34372.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Великий трактор',desc:'Поворот 180° — для огляду назад.',radar:{stroke:7,comfort:7,tech:8,adjustability:9,health:7,features:7}},
-  {id:'s22',series:'D5565',pn:'SA30582.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Великий трактор',desc:'Ел. поперекова, керування з підлокітника.',radar:{stroke:7,comfort:8,tech:8,adjustability:8,health:8,features:8}},
-  {id:'s23',series:'D5575',pn:'SA30581.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Великий трактор',desc:'Регульований амортизатор, ел. поперекова.',radar:{stroke:7,comfort:8,tech:8,adjustability:9,health:8,features:8}},
-  {id:'s24',series:'D5575',pn:'SA30583.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:true,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Великий трактор',desc:'+ Підігрів подушок.',radar:{stroke:7,comfort:9,tech:8,adjustability:9,health:8,features:9}},
-  {id:'s25',series:'D5580',pn:'SA37230.175',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'vis',suspLabel:'VIS Ultra-LNF',stroke:156,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:true,heat:true,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew тканина',app:'Великий трактор',desc:'VIS Ultra-LNF, бічний ізолятор, підігрів.',radar:{stroke:8,comfort:9,tech:9,adjustability:9,health:9,features:9}},
-  {id:'s26',series:'D5580',pn:'SA37231.185',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'vis',suspLabel:'VIS Ultra-LNF',stroke:156,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:true,heat:true,vent:true,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew шкіра',app:'Великий трактор',desc:'Шкіра + підігрів + вентиляція.',radar:{stroke:8,comfort:10,tech:9,adjustability:9,health:9,features:10}},
-  {id:'s27',series:'D5585',pn:'SA30589.175',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'wide',suspLabel:'Extra Wide LNF',stroke:178,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:true,heat:true,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew тканина',app:'Важка техніка',desc:'Extra Wide 178мм, бічний ізолятор, підігрів.',radar:{stroke:10,comfort:9,tech:9,adjustability:9,health:10,features:9}},
-  {id:'s28',series:'D5585',pn:'SA48188.185',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'wide',suspLabel:'Extra Wide LNF',stroke:178,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:true,heat:true,vent:true,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew шкіра',app:'Важка техніка',desc:'Extra Wide + шкіра + підігрів + вентиляція.',radar:{stroke:10,comfort:10,tech:9,adjustability:9,health:10,features:10}},
-  {id:'s29',series:'D5595',pn:'SA37233.185',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'avrs',suspLabel:'ActiveVRS',stroke:178,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:true,heat:true,vent:true,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew шкіра',app:'Надважка техніка',desc:'ActiveVRS реологічна, 178мм.',radar:{stroke:10,comfort:10,tech:10,adjustability:10,health:10,features:10}},
-  {id:'s30',series:'D5590',pn:'SA34373.175',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'avrs',suspLabel:'ActiveVRS',stroke:156,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:true,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew тканина',app:'Великий трактор',desc:'ActiveVRS + Active Ride Control.',radar:{stroke:8,comfort:9,tech:10,adjustability:10,health:10,features:9}},
-  {id:'s31',series:'D5590',pn:'SA37232.185',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'avrs',suspLabel:'ActiveVRS',stroke:156,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:true,vent:true,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew шкіра',app:'Великий трактор',desc:'ActiveVRS + шкіра + підігрів + вент.',radar:{stroke:8,comfort:10,tech:10,adjustability:10,health:10,features:10}},
-  {id:'s32',series:'D8575',pn:'SA34385.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Комбайн / Харвестер',desc:'Висока спинка, LNF Air.',radar:{stroke:8,comfort:8,tech:8,adjustability:9,health:8,features:8}},
-  {id:'s33',series:'D8575',pn:'SA34384.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:true,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Комбайн / Харвестер',desc:'Висока спинка + підігрів.',radar:{stroke:8,comfort:9,tech:8,adjustability:9,health:8,features:9}},
-  {id:'s34',series:'1430',pn:'SA20411',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Середній трактор',desc:'Mid-back спинка, Compact Air.',radar:{stroke:3,comfort:4,tech:4,adjustability:3,health:4,features:3}},
-  {id:'s35',series:'1430',pn:'SA20403.400',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'Fabriform',app:'Середній трактор',desc:'Mid-back + Compact Air + Fabriform.',radar:{stroke:3,comfort:4,tech:4,adjustability:3,health:4,features:3}},
-  {id:'s36',series:'1430+',pn:'SA26411.400',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'Fabriform',app:'Середній трактор',desc:'Mid-back + Compact Air + Ізолятор.',radar:{stroke:3,comfort:4,tech:5,adjustability:3,health:5,features:3}},
+    {id:'s01',series:'606',pn:'SA20455',tier:1,tierName:'Базовий',color:'#475569',susp:'mech',suspLabel:'Механічна',stroke:108,weight:[45,150],slide:152,price:0,inStock:false,features:{backRecline:false,lumbar:false,armrests:false,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Компактна техніка',desc:'Оновлена підвіска за сидінням зі зниженим SIP.',radar:{stroke:2,comfort:1,tech:1,adjustability:2,health:2,features:1}},
+  {id:'s02',series:'706',pn:'SA20491',tier:1,tierName:'Базовий',color:'#475569',susp:'mech',suspLabel:'Механічна',stroke:108,weight:[45,150],slide:152,price:0,inStock:false,features:{backRecline:false,lumbar:false,armrests:false,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Компактна техніка',desc:'Знижений SIP, покращена геометрія пружини.',radar:{stroke:2,comfort:1,tech:1,adjustability:2,health:2,features:1}},
+  {id:'s03',series:'608',pn:'SA20453',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,price:0,inStock:false,features:{backRecline:false,lumbar:false,armrests:false,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Малий трактор',desc:'Компактна механічна підвіска, надійна сталева рама.',radar:{stroke:3,comfort:2,tech:2,adjustability:2,health:3,features:1}},
+  {id:'s04',series:'708',pn:'SA20489',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,price:23414.44,inStock:false,features:{backRecline:false,lumbar:false,armrests:false,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Малий трактор',desc:'Ергономічна одноцілісна подушка.',radar:{stroke:3,comfort:2,tech:2,adjustability:2,health:3,features:1}},
+  {id:'s05',series:'908',pn:'SA22276',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,price:0,inStock:false,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Середній трактор',desc:'З відкидними підлокітниками.',radar:{stroke:3,comfort:3,tech:2,adjustability:3,health:3,features:2}},
+  {id:'s06',series:'908',pn:'SA20459.400',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,price:31004.38,inStock:false,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'Fabriform',app:'Середній трактор',desc:'Fabriform подушки.',radar:{stroke:3,comfort:3,tech:2,adjustability:3,health:3,features:2}},
+  {id:'s07',series:'930',pn:'SA20442',tier:3,tierName:'Середній',color:'#0f766e',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,price:38908.26,inStock:false,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Компактна техніка',desc:'Compact Air — відмінне гасіння вібрацій.',radar:{stroke:3,comfort:4,tech:4,adjustability:3,health:4,features:2}},
+  {id:'s08',series:'930',pn:'SA20442.400',tier:3,tierName:'Середній',color:'#0f766e',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,price:39946.34,inStock:true,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'Fabriform',app:'Компактна техніка',desc:'Fabriform + Compact Air.',radar:{stroke:3,comfort:4,tech:4,adjustability:3,health:4,features:2}},
+  {id:'s09',series:'930+',pn:'SA26410.400',tier:3,tierName:'Середній',color:'#0f766e',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,price:0,inStock:false,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'Fabriform',app:'Компактна техніка',desc:'З ізолятором перед/зад.',radar:{stroke:3,comfort:4,tech:5,adjustability:3,health:5,features:3}},
+  {id:'s10',series:'3008',pn:'SA20464.100',tier:3,tierName:'Середній',color:'#0f766e',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,price:31355.99,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'PVC',app:'Середній трактор',desc:'Нахил спинки та поперекова підтримка.',radar:{stroke:3,comfort:4,tech:3,adjustability:4,health:4,features:4}},
+  {id:'s11',series:'3008',pn:'SA24121.400',tier:3,tierName:'Середній',color:'#0f766e',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,price:32598.13,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Середній трактор',desc:'Fabriform + нахил + поперекова.',radar:{stroke:3,comfort:5,tech:3,adjustability:4,health:4,features:4}},
+  {id:'s12',series:'3008+',pn:'SA20464.102',tier:3,tierName:'Середній',color:'#0f766e',susp:'cmech',suspLabel:'Компакт.мех.',stroke:130,weight:[45,130],slide:152,price:0,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Середній трактор',desc:'+ Ізолятор перед/зад.',radar:{stroke:3,comfort:5,tech:4,adjustability:4,health:5,features:4}},
+  {id:'s13',series:'3030',pn:'SA20465.100',tier:4,tierName:'Просунутий',color:'#6d28d9',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,price:0,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'PVC',app:'Середній трактор',desc:'Air підвіска + нахил + поперекова.',radar:{stroke:3,comfort:5,tech:5,adjustability:5,health:5,features:4}},
+  {id:'s14',series:'3030',pn:'SA24122.400',tier:4,tierName:'Просунутий',color:'#6d28d9',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,price:43392.32,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Середній трактор',desc:'Fabriform + Air + нахил + поперекова.',radar:{stroke:3,comfort:6,tech:5,adjustability:5,health:5,features:4}},
+  {id:'s15',series:'3030+',pn:'SA25496.400',tier:4,tierName:'Просунутий',color:'#6d28d9',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,price:49001.32,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Середній трактор',desc:'+ Ізолятор перед/зад.',radar:{stroke:3,comfort:6,tech:6,adjustability:5,health:6,features:5}},
+  {id:'s16',series:'D3030',pn:'SA26467.400',tier:4,tierName:'Просунутий',color:'#6d28d9',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,price:49297.47,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Середній трактор',desc:'Deluxe: Поворот 20°, рег. верхня спинка.',radar:{stroke:3,comfort:7,tech:6,adjustability:6,health:6,features:5}},
+  {id:'s17',series:'3045',pn:'SA24119.400',tier:4,tierName:'Просунутий',color:'#6d28d9',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:152,price:56103.61,inStock:true,features:{backRecline:true,lumbar:true,armrests:true,swivel:false,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Мала/середня техніка',desc:'LNF Air 156мм — топ для малої техніки.',radar:{stroke:7,comfort:6,tech:7,adjustability:6,health:7,features:6}},
+  {id:'s18',series:'3045',pn:'SA24117.400',tier:4,tierName:'Просунутий',color:'#6d28d9',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:152,price:54886.58,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:true},cushion:'Fabriform',app:'Мала/середня техніка',desc:'+ Поворот 20°/20°.',radar:{stroke:7,comfort:7,tech:7,adjustability:7,health:7,features:6}},
+  {id:'s19',series:'D3045',pn:'SA24118.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:152,price:60694.41,inStock:true,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Мала/середня техніка',desc:'Deluxe: авто рег., датчик.',radar:{stroke:7,comfort:8,tech:8,adjustability:8,health:7,features:8}},
+  {id:'s20',series:'5545',pn:'SA30580.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,price:70724.69,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Великий трактор',desc:'Поворот 24°, 200мм слайд, авто рег.',radar:{stroke:7,comfort:7,tech:8,adjustability:8,health:7,features:7}},
+  {id:'s21',series:'5545',pn:'SA34372.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,price:0,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Великий трактор',desc:'Поворот 180° — для огляду назад.',radar:{stroke:7,comfort:7,tech:8,adjustability:9,health:7,features:7}},
+  {id:'s22',series:'D5565',pn:'SA30582.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,price:81728.17,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Великий трактор',desc:'Ел. поперекова, керування з підлокітника.',radar:{stroke:7,comfort:8,tech:8,adjustability:8,health:8,features:8}},
+  {id:'s23',series:'D5575',pn:'SA30581.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,price:84605.92,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Великий трактор',desc:'Регульований амортизатор, ел. поперекова.',radar:{stroke:7,comfort:8,tech:8,adjustability:9,health:8,features:8}},
+  {id:'s24',series:'D5575',pn:'SA30583.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,price:99709.41,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:true,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Великий трактор',desc:'+ Підігрів подушок.',radar:{stroke:7,comfort:9,tech:8,adjustability:9,health:8,features:9}},
+  {id:'s25',series:'D5580',pn:'SA37230.175',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'vis',suspLabel:'VIS Ultra-LNF',stroke:156,weight:[45,200],slide:200,price:127540.94,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:true,heat:true,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew тканина',app:'Великий трактор',desc:'VIS Ultra-LNF, бічний ізолятор, підігрів.',radar:{stroke:8,comfort:9,tech:9,adjustability:9,health:9,features:9}},
+  {id:'s26',series:'D5580',pn:'SA37231.185',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'vis',suspLabel:'VIS Ultra-LNF',stroke:156,weight:[45,200],slide:200,price:0,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:true,heat:true,vent:true,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew шкіра',app:'Великий трактор',desc:'Шкіра + підігрів + вентиляція.',radar:{stroke:8,comfort:10,tech:9,adjustability:9,health:9,features:10}},
+  {id:'s27',series:'D5585',pn:'SA30589.175',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'wide',suspLabel:'Extra Wide LNF',stroke:178,weight:[45,200],slide:200,price:154929.81,inStock:true,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:true,heat:true,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew тканина',app:'Важка техніка',desc:'Extra Wide 178мм, бічний ізолятор, підігрів.',radar:{stroke:10,comfort:9,tech:9,adjustability:9,health:10,features:9}},
+  {id:'s28',series:'D5585',pn:'SA48188.185',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'wide',suspLabel:'Extra Wide LNF',stroke:178,weight:[45,200],slide:200,price:0,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:true,heat:true,vent:true,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew шкіра',app:'Важка техніка',desc:'Extra Wide + шкіра + підігрів + вентиляція.',radar:{stroke:10,comfort:10,tech:9,adjustability:9,health:10,features:10}},
+  {id:'s29',series:'D5595',pn:'SA37233.185',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'avrs',suspLabel:'ActiveVRS',stroke:178,weight:[45,200],slide:200,price:239667.58,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:true,heat:true,vent:true,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew шкіра',app:'Надважка техніка',desc:'ActiveVRS реологічна, 178мм.',radar:{stroke:10,comfort:10,tech:10,adjustability:10,health:10,features:10}},
+  {id:'s30',series:'D5590',pn:'SA34373.175',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'avrs',suspLabel:'ActiveVRS',stroke:156,weight:[45,200],slide:200,price:162514.52,inStock:true,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:true,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew тканина',app:'Великий трактор',desc:'ActiveVRS + Active Ride Control.',radar:{stroke:8,comfort:9,tech:10,adjustability:10,health:10,features:9}},
+  {id:'s31',series:'D5590',pn:'SA37232.185',tier:6,tierName:'Еліт',color:'#b91c1c',susp:'avrs',suspLabel:'ActiveVRS',stroke:156,weight:[45,200],slide:200,price:217687.83,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:true,vent:true,autoWeight:true,presence:true,adaptor:true},cushion:'Cut&Sew шкіра',app:'Великий трактор',desc:'ActiveVRS + шкіра + підігрів + вент.',radar:{stroke:8,comfort:10,tech:10,adjustability:10,health:10,features:10}},
+  {id:'s32',series:'D8575',pn:'SA34385.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,price:89146.49,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Комбайн / Харвестер',desc:'Висока спинка, LNF Air.',radar:{stroke:8,comfort:8,tech:8,adjustability:9,health:8,features:8}},
+  {id:'s33',series:'D8575',pn:'SA34384.400',tier:5,tierName:'Преміум',color:'#c2410c',susp:'lnf',suspLabel:'LNF Air',stroke:156,weight:[45,200],slide:200,price:97615.45,inStock:false,features:{backRecline:true,lumbar:true,armrests:true,swivel:true,isolator:true,lateralIso:false,heat:true,vent:false,autoWeight:true,presence:true,adaptor:true},cushion:'Fabriform',app:'Комбайн / Харвестер',desc:'Висока спинка + підігрів.',radar:{stroke:8,comfort:9,tech:8,adjustability:9,health:8,features:9}},
+  {id:'s34',series:'1430',pn:'SA20411',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,price:0,inStock:false,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Середній трактор',desc:'Mid-back спинка, Compact Air.',radar:{stroke:3,comfort:4,tech:4,adjustability:3,health:4,features:3}},
+  {id:'s35',series:'1430',pn:'SA20403.400',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,price:40972.91,inStock:false,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'Fabriform',app:'Середній трактор',desc:'Mid-back + Compact Air + Fabriform.',radar:{stroke:3,comfort:4,tech:4,adjustability:3,health:4,features:3}},
+  {id:'s36',series:'1430+',pn:'SA26411.400',tier:2,tierName:'Стандарт',color:'#1e5799',susp:'cair',suspLabel:'Compact Air',stroke:130,weight:[45,180],slide:152,price:46544.24,inStock:false,features:{backRecline:false,lumbar:false,armrests:true,swivel:false,isolator:true,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'Fabriform',app:'Середній трактор',desc:'Mid-back + Compact Air + Ізолятор.',radar:{stroke:3,comfort:4,tech:5,adjustability:3,health:5,features:3}},
+  {id:'s37',series:'1408',pn:'SA22275',tier:1,tierName:'Базовий',color:'#6c757d',susp:'mech',suspLabel:'Compact Mechanical',stroke:130,weight:[45,130],slide:152,price:31934.68,inStock:true,features:{backRecline:false,lumbar:false,armrests:false,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Малий / середній трактор',desc:'Low-back, компактна механіка.',radar:{stroke:3,comfort:2,tech:2,adjustability:2,health:3,features:2}},
+  {id:'s38',series:'1408',pn:'SA20463.400',tier:1,tierName:'Базовий',color:'#6c757d',susp:'mech',suspLabel:'Compact Mechanical',stroke:130,weight:[45,130],slide:152,price:0,inStock:false,features:{backRecline:false,lumbar:false,armrests:false,swivel:false,isolator:false,lateralIso:false,heat:false,vent:false,autoWeight:false,presence:false,adaptor:false},cushion:'PVC',app:'Малий / середній трактор',desc:'Mid-back, компактна механіка.',radar:{stroke:3,comfort:2,tech:2,adjustability:2,health:3,features:2}},
 ];
 
 // ═══════════════════════════════════════════
@@ -621,6 +692,16 @@ function renderCards(seats){
         <div class="pc-spec"><div class="pc-spec-l">Рівень</div><div class="pc-spec-v">${s.tier}</div></div>
       </div>
       <div class="pc-tags">${tags}</div>
+      <div class="pc-commerce">
+        <div>
+          <div class="pc-price">${s.price.toLocaleString('uk-UA')} ₴</div>
+          <div class="pc-price-sub">орієнтовна ціна</div>
+        </div>
+        <div class="pc-stock ${s.inStock?'yes':'no'}">
+          <div class="pc-stock-dot"></div>
+          ${s.inStock?'В наявності':'Під замовлення'}
+        </div>
+      </div>
       <div class="pc-foot">
         <div class="pc-app">🚜 ${s.app}</div>
         <button class="pc-add${inCmp?' added':''}" onclick="toggleCompare('${s.id}',event)" title="${inCmp?'Видалити':'Додати до порівняння'}">${inCmp?'✓':'+'}</button>
@@ -714,6 +795,37 @@ function drawMiniRadar(canvas, seat){
 }
 
 // ═══════════════════════════════════════════
+// DUAL PRICE SLIDER
+// ═══════════════════════════════════════════
+const PRICE_MIN_GLOBAL=4200;
+const PRICE_MAX_GLOBAL=48500;
+
+function syncPriceSliders(){
+  const elMin=document.getElementById('priceMin');
+  const elMax=document.getElementById('priceMax');
+  let vMin=+elMin.value;
+  let vMax=+elMax.value;
+  const gap=1000; // мін. відстань між повзунками
+  if(vMin>vMax-gap){
+    if(document.activeElement===elMin) vMin=vMax-gap;
+    else vMax=vMin+gap;
+    elMin.value=vMin;
+    elMax.value=vMax;
+  }
+  updatePriceUI(vMin,vMax);
+  applyFilters();
+}
+
+function updatePriceUI(vMin,vMax){
+  const pct=(v,mn,mx)=>((v-mn)/(mx-mn)*100).toFixed(2);
+  const fill=document.getElementById('priceRangeFill');
+  fill.style.left=pct(vMin,PRICE_MIN_GLOBAL,PRICE_MAX_GLOBAL)+'%';
+  fill.style.right=(100-pct(vMax,PRICE_MIN_GLOBAL,PRICE_MAX_GLOBAL))+'%';
+  document.getElementById('priceLblMin').textContent=vMin.toLocaleString('uk-UA')+' ₴';
+  document.getElementById('priceLblMax').textContent=vMax.toLocaleString('uk-UA')+' ₴';
+}
+
+// ═══════════════════════════════════════════
 // FILTERS
 // ═══════════════════════════════════════════
 function getActiveFilters(){
@@ -721,12 +833,16 @@ function getActiveFilters(){
   const tierChecked=[...document.querySelectorAll('#tierFilters input:checked')].map(i=>+i.value);
   const q=document.getElementById('sbSearch').value.toLowerCase();
   const minStroke=+document.getElementById('strokeRange').value;
-  return{suspChecked,tierChecked,q,minStroke};
+  const stockIn=document.getElementById('filterInStock').checked;
+  const stockOrder=document.getElementById('filterOnOrder').checked;
+  const priceMin=+document.getElementById('priceMin').value;
+  const priceMax=+document.getElementById('priceMax').value;
+  return{suspChecked,tierChecked,q,minStroke,stockIn,stockOrder,priceMin,priceMax};
 }
 
 function applyFilters(){
-  const {suspChecked,tierChecked,q,minStroke}=getActiveFilters();
-  const sortVal=document.querySelector('.sort-sel').value;
+  const {suspChecked,tierChecked,q,minStroke,stockIn,stockOrder,priceMin,priceMax}=getActiveFilters();
+  const sortVal=document.getElementById('sortSel').value;
 
   let filtered=[...SEATS];
   if(suspChecked.length) filtered=filtered.filter(s=>suspChecked.includes(s.susp));
@@ -735,9 +851,22 @@ function applyFilters(){
   if(q) filtered=filtered.filter(s=>(s.series+s.pn+s.app+s.suspLabel).toLowerCase().includes(q));
   filtered=filtered.filter(s=>s.stroke>=minStroke);
 
+  // Price range
+  if(priceMin>PRICE_MIN_GLOBAL||priceMax<PRICE_MAX_GLOBAL){
+    filtered=filtered.filter(s=>s.price>=priceMin&&s.price<=priceMax);
+  }
+
+  // Stock filter
+  if(stockIn||stockOrder){
+    filtered=filtered.filter(s=>(stockIn&&s.inStock)||(stockOrder&&!s.inStock));
+  }
+
   filtered.sort((a,b)=>{
     if(sortVal==='tier') return a.tier-b.tier;
     if(sortVal==='tier-desc') return b.tier-a.tier;
+    if(sortVal==='price') return a.price-b.price;
+    if(sortVal==='price-desc') return b.price-a.price;
+    if(sortVal==='stock') return (b.inStock?1:0)-(a.inStock?1:0);
     if(sortVal==='stroke') return a.stroke-b.stroke;
     if(sortVal==='stroke-desc') return b.stroke-a.stroke;
     if(sortVal==='series') return a.series.localeCompare(b.series);
@@ -762,6 +891,11 @@ function resetFilters(){
   document.getElementById('sbSearch').value='';
   document.getElementById('strokeRange').value=100;
   document.getElementById('strokeLbl').textContent='≥ 100мм';
+  document.getElementById('filterInStock').checked=false;
+  document.getElementById('filterOnOrder').checked=false;
+  document.getElementById('priceMin').value=PRICE_MIN_GLOBAL;
+  document.getElementById('priceMax').value=PRICE_MAX_GLOBAL;
+  updatePriceUI(PRICE_MIN_GLOBAL,PRICE_MAX_GLOBAL);
   activeFeatFilters.clear();
   document.querySelectorAll('.ff-btn').forEach(b=>b.classList.remove('on'));
   applyFilters();
@@ -1124,7 +1258,10 @@ function buildModalFeats(s){
 }
 
 function closeModal(e){
-  if(e&&e.target!==document.getElementById('modalOverlay')) return;
+  // Called from button (no e) or from overlay click (e = click event)
+  if(e&&e.currentTarget&&e.currentTarget.id==='modalOverlay'){
+    if(e.target!==e.currentTarget) return; // click inside modal, ignore
+  }
   document.getElementById('modalOverlay').classList.remove('open');
 }
 
@@ -1134,10 +1271,18 @@ function closeModal(e){
 function setMode(mode,tabEl){
   currentMode=mode;
   document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
-  tabEl.classList.add('active');
+  if(tabEl) tabEl.classList.add('active');
   document.getElementById('catalogView').style.display=mode==='catalog'?'block':'none';
   document.getElementById('compareView').style.display=mode==='compare'?'block':'none';
   document.getElementById('radarView').style.display=mode==='radar'?'block':'none';
+  // Sync mobile bottom nav
+  document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('active','cmp-active'));
+  const mobMap={catalog:'mobNavCatalog',compare:'mobNavCompare',radar:'mobNavRadar'};
+  const mobBtn=document.getElementById(mobMap[mode]);
+  if(mobBtn) mobBtn.classList.add(mode==='compare'?'cmp-active':'active');
+  // Hide FAB on non-catalog modes
+  const fab=document.getElementById('mobFilterFab');
+  if(fab) fab.style.display=mode==='catalog'?'':'none';
   if(mode==='compare') renderCompare();
   if(mode==='radar') renderRadarView();
 }
@@ -1183,19 +1328,8 @@ function closeMobileFilter(){
 }
 
 function mobSetMode(mode){
-  // Sync with desktop mode tabs
-  const tabMap={catalog:0,compare:1,radar:2};
-  const tabs=document.querySelectorAll('.mode-tab');
-  const tab=tabs[tabMap[mode]];
-  setMode(mode,tab);
-
-  // Update mobile nav
-  document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('active','cmp-active'));
-  const mobBtns={catalog:'mobNavCatalog',compare:'mobNavCompare',radar:'mobNavRadar'};
-  const activeBtn=document.getElementById(mobBtns[mode]);
-  if(activeBtn){
-    activeBtn.classList.add(mode==='compare'?'cmp-active':'active');
-  }
+  setMode(mode, null);
+  if(mode!=='catalog') closeMobileFilter();
 }
 
 // Touch swipe to close filter drawer
@@ -1221,6 +1355,9 @@ document.getElementById('sbSearch').addEventListener('input',()=>{
 // ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
+updatePriceUI(PRICE_MIN_GLOBAL, PRICE_MAX_GLOBAL);
+const mobNavCatalog=document.getElementById('mobNavCatalog');
+if(mobNavCatalog) mobNavCatalog.classList.add('active');
 applyFilters();
 </script>
 </body>
