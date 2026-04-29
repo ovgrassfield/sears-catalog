@@ -8,6 +8,7 @@
 <meta name="theme-color" content="#06080c">
 <title>Sears Seating — Повний інтерактивний каталог</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 /* ═══════════════════════════════════════════
    TOKENS
@@ -223,6 +224,95 @@ canvas.mini-radar{display:block;}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--s3);border:1px solid var(--a);border-radius:8px;padding:10px 16px;font-size:.72rem;color:var(--a);transform:translateY(60px);opacity:0;transition:all .25s;z-index:600;}
 .toast.show{transform:translateY(0);opacity:1;}
 
+/* ═══════════════════════════════════════════
+   ROI VIEW
+═══════════════════════════════════════════ */
+#roiView{display:none;}
+.roi-header{margin-bottom:20px;}
+.roi-header h2{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:3px;}
+.roi-header p{font-size:.7rem;color:var(--tx2);margin-top:4px;}
+
+/* Seat selector banner */
+.roi-seat-banner{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;background:var(--s2);border:1px solid var(--br2);margin-bottom:18px;flex-wrap:wrap;}
+.roi-seat-info{flex:1;min-width:0;}
+.roi-seat-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1.5px;color:var(--a);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.roi-seat-pn{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--tx3);}
+.roi-seat-price{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.5px;white-space:nowrap;}
+.roi-seat-hint{font-size:.62rem;color:var(--tx3);width:100%;}
+.roi-from-catalog{padding:5px 12px;border-radius:6px;border:1px solid var(--a);background:transparent;color:var(--a);font-family:'Syne',sans-serif;font-size:.65rem;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0;}
+.roi-from-catalog:hover{background:var(--a);color:#000;}
+
+/* ROI grid */
+.roi-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.roi-panel{background:var(--s1);border:1px solid var(--br);border-radius:12px;padding:18px;position:relative;overflow:hidden;}
+.roi-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--a),transparent);}
+.roi-panel.orange::before{background:linear-gradient(90deg,var(--ao),transparent);}
+.roi-panel-title{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:2px;color:var(--tx);margin-bottom:14px;}
+.roi-panel-title span{color:var(--a);}
+.roi-panel.orange .roi-panel-title span{color:var(--ao);}
+
+/* ROI fields */
+.roi-field{margin-bottom:14px;}
+.roi-field:last-child{margin-bottom:0;}
+.roi-field-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.roi-field-lbl{font-size:.68rem;color:var(--tx2);font-weight:600;}
+.roi-field-val{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.8px;color:var(--a);}
+.roi-field.orange .roi-field-val{color:var(--ao);}
+.roi-field input[type=range]{width:100%;accent-color:var(--a);}
+.roi-field.orange input[type=range]{accent-color:var(--ao);}
+
+/* Metric cards */
+.roi-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+.roi-mc{background:var(--s2);border:1px solid var(--br);border-radius:10px;padding:14px 12px;}
+.roi-mc.hl{border-color:rgba(0,229,201,.25);background:rgba(0,229,201,.06);}
+.roi-mc.hlo{border-color:rgba(255,105,48,.22);background:rgba(255,105,48,.06);}
+.roi-mc-lbl{font-size:.55rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:5px;}
+.roi-mc-val{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.8px;line-height:1;}
+.roi-mc-val.green{color:var(--a);}
+.roi-mc-val.orange{color:var(--ao);}
+.roi-mc-sub{font-size:.58rem;color:var(--tx3);margin-top:3px;}
+
+/* Payback bar */
+.roi-pb-wrap{background:var(--s2);border:1px solid var(--br);border-radius:10px;padding:14px 16px;margin-bottom:16px;}
+.roi-pb-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.roi-pb-lbl{font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);}
+.roi-pb-months{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.8px;color:var(--a);}
+.roi-pb-track{height:6px;background:var(--br3);border-radius:3px;overflow:hidden;}
+.roi-pb-fill{height:100%;border-radius:3px;background:var(--a);transition:width .4s ease;}
+.roi-pb-markers{display:flex;justify-content:space-between;margin-top:5px;font-size:.58rem;color:var(--tx3);}
+
+/* Chart */
+.roi-chart-panel{background:var(--s1);border:1px solid var(--br);border-radius:12px;padding:16px;margin-bottom:16px;position:relative;overflow:hidden;}
+.roi-chart-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--a),var(--ao));}
+.roi-chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.roi-chart-title{font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:2px;color:var(--tx);}
+.roi-chart-legend{display:flex;gap:14px;}
+.roi-leg-item{display:flex;align-items:center;gap:5px;font-size:.6rem;color:var(--tx2);}
+.roi-leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.roi-chart-wrap{position:relative;width:100%;height:200px;}
+
+/* Breakdown */
+.roi-breakdown{background:var(--s1);border:1px solid var(--br);border-radius:12px;overflow:hidden;margin-bottom:16px;}
+.roi-bp-header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--br);}
+.roi-bp-title{font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:2px;color:var(--tx);}
+.roi-bp-badge{padding:2px 9px;border-radius:20px;font-size:.56rem;font-weight:700;letter-spacing:1px;background:rgba(0,229,201,.08);border:1px solid rgba(0,229,201,.22);color:var(--a);margin-left:auto;white-space:nowrap;}
+.roi-bp-row{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid rgba(28,33,48,.6);}
+.roi-bp-row:last-child{border-bottom:none;background:var(--s2);}
+.roi-bp-icon{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.roi-bp-lbl{font-size:.7rem;color:var(--tx2);flex:1;}
+.roi-bp-val{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.5px;white-space:nowrap;}
+.roi-bp-val.green{color:var(--a);}
+.roi-bp-val.orange{color:var(--ao);}
+.roi-note{text-align:center;font-size:.62rem;color:var(--tx3);padding:8px 0;}
+
+/* Mobile ROI */
+@media(max-width:700px){
+  .roi-grid2{grid-template-columns:1fr;}
+  .roi-metrics{grid-template-columns:1fr 1fr;}
+  .roi-chart-wrap{height:170px;}
+  .roi-seat-banner{gap:8px;}
+}
+
 /* Active filter chips bar */
 .active-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
 .active-filters:empty{display:none;}
@@ -426,6 +516,7 @@ canvas.mini-radar{display:block;}
     <button class="mode-tab active" onclick="setMode('catalog',this)">📋 Каталог</button>
     <button class="mode-tab" onclick="setMode('compare',this)">⚖️ Порівняння</button>
     <button class="mode-tab" onclick="setMode('radar',this)">🕸 Радар-аналіз</button>
+    <button class="mode-tab" onclick="setMode('roi',this)">💰 ROI</button>
   </div>
   <div class="cmp-counter">
     <span id="cmpCountLbl">Порівняння:</span>
@@ -451,6 +542,9 @@ canvas.mini-radar{display:block;}
     </button>
     <button class="mob-nav-btn" id="mobNavRadar" onclick="mobSetMode('radar')">
       <span class="mob-nav-icon">🕸</span>Радар
+    </button>
+    <button class="mob-nav-btn" id="mobNavRoi" onclick="mobSetMode('roi')">
+      <span class="mob-nav-icon">💰</span>ROI
     </button>
   </div>
 </nav>
@@ -561,6 +655,112 @@ canvas.mini-radar{display:block;}
     <div class="active-filters" id="activeFilters"></div>
     <div class="cards-grid" id="cardsGrid"></div>
     <div id="emptyState" style="display:none;text-align:center;padding:60px;color:var(--tx3);font-size:.8rem;">Нічого не знайдено. Спробуйте скинути фільтри.</div>
+  </div>
+
+  <!-- ROI -->
+  <div id="roiView" style="display:none">
+    <div class="roi-header">
+      <h2>КАЛЬКУЛЯТОР ОКУПНОСТІ</h2>
+      <p>Введіть параметри підприємства — розрахуємо реальну економію, термін окупності та ROI за 3 роки</p>
+    </div>
+
+    <!-- Selected seat banner -->
+    <div class="roi-seat-banner" id="roiSeatBanner">
+      <div class="roi-seat-info">
+        <div class="roi-seat-name" id="roiSeatName">Сидіння не обрано</div>
+        <div class="roi-seat-pn" id="roiSeatPn">Оберіть сидіння з каталогу або введіть ціну вручну</div>
+      </div>
+      <div class="roi-seat-price" id="roiSeatPriceDisplay" style="color:var(--tx3)">—</div>
+      <button class="roi-from-catalog" onclick="mobSetMode('catalog')">← З каталогу</button>
+    </div>
+
+    <!-- Input panels -->
+    <div class="roi-grid2">
+      <div class="roi-panel">
+        <div class="roi-panel-title">Параметри <span>роботи</span></div>
+        <div class="roi-field">
+          <div class="roi-field-head"><span class="roi-field-lbl">Кількість операторів</span><span class="roi-field-val" id="roi-lbl-ops">2</span></div>
+          <input type="range" min="1" max="20" step="1" value="2" id="roi-ops" oninput="roiCalc()">
+        </div>
+        <div class="roi-field">
+          <div class="roi-field-head"><span class="roi-field-lbl">Робочих днів на сезон</span><span class="roi-field-val" id="roi-lbl-days">180</span></div>
+          <input type="range" min="60" max="300" step="10" value="180" id="roi-days" oninput="roiCalc()">
+        </div>
+        <div class="roi-field">
+          <div class="roi-field-head"><span class="roi-field-lbl">Годин роботи на день</span><span class="roi-field-val" id="roi-lbl-hrs">10</span></div>
+          <input type="range" min="6" max="16" step="1" value="10" id="roi-hrs" oninput="roiCalc()">
+        </div>
+        <div class="roi-field">
+          <div class="roi-field-head"><span class="roi-field-lbl">Зарплата оператора, ₴/год</span><span class="roi-field-val" id="roi-lbl-wage">150</span></div>
+          <input type="range" min="80" max="400" step="10" value="150" id="roi-wage" oninput="roiCalc()">
+        </div>
+      </div>
+
+      <div class="roi-panel orange">
+        <div class="roi-panel-title">Параметри <span>сидіння та ефекту</span></div>
+        <div class="roi-field orange">
+          <div class="roi-field-head"><span class="roi-field-lbl">Ціна нового сидіння, ₴</span><span class="roi-field-val" id="roi-lbl-price">23 414</span></div>
+          <input type="range" min="3000" max="250000" step="500" value="23414" id="roi-price" oninput="roiCalc()">
+        </div>
+        <div class="roi-field orange">
+          <div class="roi-field-head"><span class="roi-field-lbl">Зростання продуктивності, %</span><span class="roi-field-val" id="roi-lbl-prod">15</span></div>
+          <input type="range" min="5" max="35" step="1" value="15" id="roi-prod" oninput="roiCalc()">
+        </div>
+        <div class="roi-field orange">
+          <div class="roi-field-head"><span class="roi-field-lbl">Лікарняних до заміни, днів/рік</span><span class="roi-field-val" id="roi-lbl-sick-old">8</span></div>
+          <input type="range" min="0" max="30" step="1" value="8" id="roi-sick-old" oninput="roiCalc()">
+        </div>
+        <div class="roi-field orange">
+          <div class="roi-field-head"><span class="roi-field-lbl">Лікарняних після заміни, днів/рік</span><span class="roi-field-val" id="roi-lbl-sick-new">2</span></div>
+          <input type="range" min="0" max="15" step="1" value="2" id="roi-sick-new" oninput="roiCalc()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="roi-metrics">
+      <div class="roi-mc"><div class="roi-mc-lbl">Інвестиція</div><div class="roi-mc-val" id="roi-m-invest">—</div><div class="roi-mc-sub">загальна вартість</div></div>
+      <div class="roi-mc hl"><div class="roi-mc-lbl">Економія / рік</div><div class="roi-mc-val green" id="roi-m-save">—</div><div class="roi-mc-sub">всі джерела</div></div>
+      <div class="roi-mc hlo"><div class="roi-mc-lbl">Окупність</div><div class="roi-mc-val orange" id="roi-m-payback">—</div><div class="roi-mc-sub">місяців</div></div>
+      <div class="roi-mc hl"><div class="roi-mc-lbl">ROI за 3 роки</div><div class="roi-mc-val green" id="roi-m-roi">—</div><div class="roi-mc-sub">повернення інвестиції</div></div>
+    </div>
+
+    <!-- Payback bar -->
+    <div class="roi-pb-wrap">
+      <div class="roi-pb-head">
+        <span class="roi-pb-lbl">Прогрес окупності (36 місяців)</span>
+        <span class="roi-pb-months" id="roi-pb-text">Розрахунок...</span>
+      </div>
+      <div class="roi-pb-track"><div class="roi-pb-fill" id="roi-pb-fill" style="width:0%"></div></div>
+      <div class="roi-pb-markers"><span>0</span><span>6 міс</span><span>12 міс</span><span>18 міс</span><span>24 міс</span><span>36 міс</span></div>
+    </div>
+
+    <!-- Chart -->
+    <div class="roi-chart-panel">
+      <div class="roi-chart-head">
+        <span class="roi-chart-title">Накопичений ефект vs вартість інвестиції</span>
+        <div class="roi-chart-legend">
+          <div class="roi-leg-item"><div class="roi-leg-dot" style="background:#00e5c9"></div>Накопичена економія</div>
+          <div class="roi-leg-item"><div class="roi-leg-dot" style="background:#ff6930;opacity:.7"></div>Інвестиція</div>
+        </div>
+      </div>
+      <div class="roi-chart-wrap"><canvas id="roiChart"></canvas></div>
+    </div>
+
+    <!-- Breakdown -->
+    <div class="roi-breakdown">
+      <div class="roi-bp-header">
+        <span class="roi-bp-title">Деталізація річної економії</span>
+        <span class="roi-bp-badge" id="roi-bp-total">Всього: ₴0/рік</span>
+      </div>
+      <div class="roi-bp-row"><div class="roi-bp-icon" style="background:rgba(0,229,201,.08)">📈</div><div class="roi-bp-lbl">Зростання продуктивності операторів</div><div class="roi-bp-val green" id="roi-b-prod">₴0</div></div>
+      <div class="roi-bp-row"><div class="roi-bp-icon" style="background:rgba(0,229,201,.08)">🏥</div><div class="roi-bp-lbl">Економія на лікарняних</div><div class="roi-bp-val green" id="roi-b-sick">₴0</div></div>
+      <div class="roi-bp-row"><div class="roi-bp-icon" style="background:rgba(0,229,201,.08)">🔧</div><div class="roi-bp-lbl">Зниження помилок і ремонтів (оцінка 7%)</div><div class="roi-bp-val green" id="roi-b-err">₴0</div></div>
+      <div class="roi-bp-row"><div class="roi-bp-icon" style="background:rgba(255,105,48,.08)">💰</div><div class="roi-bp-lbl" style="color:var(--tx)">Вартість сидінь (одноразова інвестиція)</div><div class="roi-bp-val orange" id="roi-b-cost">₴0</div></div>
+      <div class="roi-bp-row"><div class="roi-bp-icon" style="background:rgba(0,229,201,.12);border:1px solid rgba(0,229,201,.25)">✓</div><div class="roi-bp-lbl" style="color:var(--tx);font-weight:600">Чиста річна вигода</div><div class="roi-bp-val green" style="font-size:1.2rem" id="roi-b-net">₴0</div></div>
+    </div>
+
+    <div class="roi-note">Розрахунок є орієнтовним. Реальні показники залежать від умов роботи, марки техніки та кваліфікації операторів.</div>
   </div>
 
   <!-- COMPARE -->
@@ -705,6 +905,7 @@ function renderCards(seats){
       <div class="pc-foot">
         <div class="pc-app">🚜 ${s.app}</div>
         <button class="pc-add${inCmp?' added':''}" onclick="toggleCompare('${s.id}',event)" title="${inCmp?'Видалити':'Додати до порівняння'}">${inCmp?'✓':'+'}</button>
+        <button class="pc-add" onclick="roiFromCard('${s.id}',event)" title="Розрахувати ROI" style="border-color:rgba(255,105,48,.3);color:var(--ao)">₴</button>
       </div>`;
 
     card.addEventListener('click', e=>{
@@ -1288,6 +1489,9 @@ function openModal(s){
           <button onclick="toggleCompare('${s.id}');closeModal()" style="flex:1;padding:8px;border-radius:7px;border:1px solid ${compareList.includes(s.id)?'var(--ao)':'var(--a)'};background:transparent;color:${compareList.includes(s.id)?'var(--ao)':'var(--a)'};font-family:'Syne',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer">
             ${compareList.includes(s.id)?'✕ Видалити з порівняння':'⚖ Додати до порівняння'}
           </button>
+          <button onclick="roiFromCard('${s.id}');closeModal()" style="flex:1;padding:8px;border-radius:7px;border:1px solid rgba(255,105,48,.4);background:transparent;color:var(--ao);font-family:'Syne',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer">
+            💰 Розрахувати ROI
+          </button>
         </div>
       </div>
       <div class="modal-right">
@@ -1339,9 +1543,10 @@ function setMode(mode,tabEl){
   document.getElementById('catalogView').style.display=mode==='catalog'?'block':'none';
   document.getElementById('compareView').style.display=mode==='compare'?'block':'none';
   document.getElementById('radarView').style.display=mode==='radar'?'block':'none';
+  document.getElementById('roiView').style.display=mode==='roi'?'block':'none';
   // Sync mobile bottom nav
   document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('active','cmp-active'));
-  const mobMap={catalog:'mobNavCatalog',compare:'mobNavCompare',radar:'mobNavRadar'};
+  const mobMap={catalog:'mobNavCatalog',compare:'mobNavCompare',radar:'mobNavRadar',roi:'mobNavRoi'};
   const mobBtn=document.getElementById(mobMap[mode]);
   if(mobBtn) mobBtn.classList.add(mode==='compare'?'cmp-active':'active');
   // Hide FAB on non-catalog modes
@@ -1349,6 +1554,7 @@ function setMode(mode,tabEl){
   if(fab) fab.style.display=mode==='catalog'?'':'none';
   if(mode==='compare') renderCompare();
   if(mode==='radar') renderRadarView();
+  if(mode==='roi'){ roiCalc(); }
 }
 
 function setGridView(v){
@@ -1375,6 +1581,126 @@ function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ═══════════════════════════════════════════
+// ROI CALCULATOR
+// ═══════════════════════════════════════════
+let roiChart=null;
+let roiSelectedSeat=null;
+
+function roiUah(n){return '₴'+Math.round(n).toLocaleString('uk-UA');}
+
+function roiSetSeat(seat){
+  roiSelectedSeat=seat;
+  document.getElementById('roiSeatName').textContent=seat.series+' — '+seat.suspLabel;
+  document.getElementById('roiSeatPn').textContent=seat.pn;
+  if(seat.price>0){
+    document.getElementById('roiSeatPriceDisplay').textContent=seat.price.toLocaleString('uk-UA')+' ₴';
+    document.getElementById('roiSeatPriceDisplay').style.color='var(--a)';
+    const priceSlider=document.getElementById('roi-price');
+    priceSlider.value=Math.min(seat.price,250000);
+    document.getElementById('roi-lbl-price').textContent=seat.price.toLocaleString('uk-UA');
+  } else {
+    document.getElementById('roiSeatPriceDisplay').textContent='За запитом';
+    document.getElementById('roiSeatPriceDisplay').style.color='var(--tx3)';
+  }
+  roiCalc();
+}
+
+function roiCalc(){
+  const ops     =+document.getElementById('roi-ops').value;
+  const days    =+document.getElementById('roi-days').value;
+  const hrs     =+document.getElementById('roi-hrs').value;
+  const wage    =+document.getElementById('roi-wage').value;
+  const price   =+document.getElementById('roi-price').value;
+  const prodPct =+document.getElementById('roi-prod').value;
+  const sickOld =+document.getElementById('roi-sick-old').value;
+  const sickNew =+document.getElementById('roi-sick-new').value;
+
+  document.getElementById('roi-lbl-ops').textContent=ops;
+  document.getElementById('roi-lbl-days').textContent=days;
+  document.getElementById('roi-lbl-hrs').textContent=hrs;
+  document.getElementById('roi-lbl-wage').textContent=wage;
+  document.getElementById('roi-lbl-price').textContent=price.toLocaleString('uk-UA');
+  document.getElementById('roi-lbl-prod').textContent=prodPct;
+  document.getElementById('roi-lbl-sick-old').textContent=sickOld;
+  document.getElementById('roi-lbl-sick-new').textContent=sickNew;
+
+  const totalInvest  =ops*price;
+  const annualWage   =ops*days*hrs*wage;
+  const prodSavings  =annualWage*(prodPct/100);
+  const sickSavings  =Math.max(0,sickOld-sickNew)*ops*hrs*wage;
+  const errSavings   =prodSavings*0.07;
+  const totalSave    =prodSavings+sickSavings+errSavings;
+  const paybackM     =totalSave>0?(totalInvest/totalSave)*12:Infinity;
+  const roi3yr       =totalSave>0?((totalSave*3-totalInvest)/totalInvest)*100:0;
+
+  document.getElementById('roi-m-invest').textContent=roiUah(totalInvest);
+  document.getElementById('roi-m-save').textContent=roiUah(totalSave);
+  document.getElementById('roi-m-payback').textContent=paybackM<120?Math.round(paybackM)+' міс.':'>10р.';
+  document.getElementById('roi-m-roi').textContent='+'+Math.round(roi3yr)+'%';
+  document.getElementById('roi-b-prod').textContent=roiUah(prodSavings);
+  document.getElementById('roi-b-sick').textContent=roiUah(sickSavings);
+  document.getElementById('roi-b-err').textContent=roiUah(errSavings);
+  document.getElementById('roi-b-cost').textContent='−'+roiUah(totalInvest);
+  document.getElementById('roi-b-net').textContent=roiUah(totalSave);
+  document.getElementById('roi-bp-total').textContent='Всього: '+roiUah(totalSave)+'/рік';
+
+  const pbPct=Math.min(100,(paybackM/36)*100);
+  document.getElementById('roi-pb-fill').style.width=pbPct.toFixed(1)+'%';
+  document.getElementById('roi-pb-text').textContent=paybackM<120?'Окупність за '+Math.round(paybackM)+' міс.':'Понад 10 років';
+
+  roiUpdateChart(totalInvest,totalSave);
+}
+
+function roiUpdateChart(invest,annualSave){
+  const months=36;
+  const labels=[],costData=[],saveData=[];
+  for(let m=0;m<=months;m++){
+    labels.push(m%6===0?m+(m===0?'':' міс'):'');
+    costData.push(Math.round(invest));
+    saveData.push(Math.round((annualSave/12)*m));
+  }
+  const gridCol='rgba(28,33,48,.8)';
+  const tickCol='#3a4560';
+  if(roiChart){
+    roiChart.data.labels=labels;
+    roiChart.data.datasets[0].data=costData;
+    roiChart.data.datasets[1].data=saveData;
+    roiChart.update('none');
+    return;
+  }
+  const canvas=document.getElementById('roiChart');
+  if(!canvas) return;
+  roiChart=new Chart(canvas,{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'Інвестиція',data:costData,borderColor:'#ff6930',backgroundColor:'rgba(255,105,48,0)',borderWidth:2,borderDash:[6,4],pointRadius:0,fill:false,tension:0},
+      {label:'Накопичена економія',data:saveData,borderColor:'#00e5c9',backgroundColor:'rgba(0,229,201,0.07)',borderWidth:2.5,pointRadius:0,fill:true,tension:0.35}
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{backgroundColor:'#0d1018',borderColor:'#1c2130',borderWidth:1,titleColor:'#7a8ba8',bodyColor:'#d8e0f0',titleFont:{family:'Syne',size:11},bodyFont:{family:'Bebas Neue',size:14},padding:10,
+          callbacks:{label:ctx=>ctx.dataset.label+':  ₴'+Math.round(ctx.parsed.y).toLocaleString('uk-UA')}
+        }
+      },
+      scales:{
+        x:{ticks:{color:tickCol,font:{family:'Syne',size:10},autoSkip:false,maxRotation:0,callback:(v,i,all)=>all[i].label||''},grid:{color:gridCol}},
+        y:{ticks:{color:tickCol,font:{family:'Syne',size:10},callback:v=>'₴'+(v>=1000?Math.round(v/1000)+'к':v)},grid:{color:gridCol}}
+      }
+    }
+  });
+}
+
+function roiFromCard(id,e){
+  if(e) e.stopPropagation();
+  const seat=SEATS.find(s=>s.id===id);
+  if(seat) roiSetSeat(seat);
+  mobSetMode('roi');
 }
 
 // ═══════════════════════════════════════════
