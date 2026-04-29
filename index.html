@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-W3DTTLLJEL"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-W3DTTLLJEL');
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -232,7 +223,12 @@ canvas.mini-radar{display:block;}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--s3);border:1px solid var(--a);border-radius:8px;padding:10px 16px;font-size:.72rem;color:var(--a);transform:translateY(60px);opacity:0;transition:all .25s;z-index:600;}
 .toast.show{transform:translateY(0);opacity:1;}
 
-/* Susp colors helper */
+/* Active filter chips bar */
+.active-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.active-filters:empty{display:none;}
+.af-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px 3px 10px;border-radius:6px;background:rgba(0,229,201,.08);border:1px solid rgba(0,229,201,.25);font-size:.62rem;color:var(--a);font-weight:600;cursor:default;}
+.af-chip-x{background:none;border:none;color:var(--a);cursor:pointer;font-size:.8rem;padding:0 0 0 2px;line-height:1;opacity:.7;}
+.af-chip-x:hover{opacity:1;}
 .sc-mech{--sc-c:var(--sm);--sc-bg:rgba(100,116,139,.1);--sc-br:rgba(100,116,139,.25);}
 .sc-cmech{--sc-c:var(--sc);--sc-bg:rgba(59,130,246,.1);--sc-br:rgba(59,130,246,.25);}
 .sc-cair{--sc-c:var(--sa);--sc-bg:rgba(6,182,212,.1);--sc-br:rgba(6,182,212,.25);}
@@ -344,6 +340,7 @@ canvas.mini-radar{display:block;}
   .cat-info{font-size:.65rem;}
   .sort-sel{font-size:.65rem;padding:4px 7px;}
   .vt-btn{width:26px;height:26px;}
+  .view-toggle{display:none;}
 
   /* Modal full screen on mobile */
   .modal-overlay{padding:0;align-items:flex-end;}
@@ -364,6 +361,8 @@ canvas.mini-radar{display:block;}
   /* Radar view mobile */
   .rad-canvas-wrap{flex-direction:column;}
   #bigRadarCanvas{max-width:100%;height:auto;}
+  .rad-canvas-box{padding:14px;min-width:0!important;width:100%;}
+  .rad-legend{min-width:0!important;max-width:100%!important;width:100%;}
 
   /* Show mobile elements */
   .mob-filter-fab{display:flex;}
@@ -520,8 +519,8 @@ canvas.mini-radar{display:block;}
       <div class="dual-range-track">
         <div class="dual-range-fill" id="priceRangeFill"></div>
       </div>
-      <input type="range" id="priceMin" min="4200" max="300000" step="100" value="4200" oninput="syncPriceSliders()">
-      <input type="range" id="priceMax" min="4200" max="300000" step="100" value="48500" oninput="syncPriceSliders()">
+      <input type="range" id="priceMin" min="0" max="1" step="100" value="0" oninput="syncPriceSliders()">
+      <input type="range" id="priceMax" min="0" max="1" step="100" value="1" oninput="syncPriceSliders()">
     </div>
     <div class="price-range-labels">
       <span class="price-range-val" id="priceLblMin">4 200 ₴</span>
@@ -559,6 +558,7 @@ canvas.mini-radar{display:block;}
         <button class="vt-btn" id="listBtn" onclick="setGridView('list')">☰</button>
       </div>
     </div>
+    <div class="active-filters" id="activeFilters"></div>
     <div class="cards-grid" id="cardsGrid"></div>
     <div id="emptyState" style="display:none;text-align:center;padding:60px;color:var(--tx3);font-size:.8rem;">Нічого не знайдено. Спробуйте скинути фільтри.</div>
   </div>
@@ -694,8 +694,8 @@ function renderCards(seats){
       <div class="pc-tags">${tags}</div>
       <div class="pc-commerce">
         <div>
-          <div class="pc-price">${s.price.toLocaleString('uk-UA')} ₴</div>
-          <div class="pc-price-sub">орієнтовна ціна</div>
+          <div class="pc-price">${s.price>0?s.price.toLocaleString('uk-UA')+' ₴':'За запитом'}</div>
+          <div class="pc-price-sub">${s.price>0?'орієнтовна ціна':'уточніть у менеджера'}</div>
         </div>
         <div class="pc-stock ${s.inStock?'yes':'no'}">
           <div class="pc-stock-dot"></div>
@@ -797,8 +797,9 @@ function drawMiniRadar(canvas, seat){
 // ═══════════════════════════════════════════
 // DUAL PRICE SLIDER
 // ═══════════════════════════════════════════
-const PRICE_MIN_GLOBAL=4200;
-const PRICE_MAX_GLOBAL=48500;
+const _pricedSeats=SEATS.filter(s=>s.price>0);
+const PRICE_MIN_GLOBAL=Math.floor(Math.min(..._pricedSeats.map(s=>s.price))/100)*100;
+const PRICE_MAX_GLOBAL=Math.ceil(Math.max(..._pricedSeats.map(s=>s.price))/1000)*1000;
 
 function syncPriceSliders(){
   const elMin=document.getElementById('priceMin');
@@ -840,6 +841,42 @@ function getActiveFilters(){
   return{suspChecked,tierChecked,q,minStroke,stockIn,stockOrder,priceMin,priceMax};
 }
 
+function renderActiveFilters(){
+  const bar=document.getElementById('activeFilters');
+  if(!bar) return;
+  const chips=[];
+  const suspChecked=[...document.querySelectorAll('#suspFilters input:checked')];
+  suspChecked.forEach(i=>{
+    const lbl=i.closest('label').querySelector('.fchk-lbl').textContent;
+    chips.push({label:'Підвіска: '+lbl,clear:()=>{i.checked=false;applyFilters();}});
+  });
+  const tierChecked=[...document.querySelectorAll('#tierFilters input:checked')];
+  tierChecked.forEach(i=>{
+    const lbl=i.closest('label').querySelector('.fchk-lbl').textContent;
+    chips.push({label:'Рівень: '+lbl,clear:()=>{i.checked=false;applyFilters();}});
+  });
+  [...activeFeatFilters].forEach(f=>{
+    const btn=document.querySelector(`.ff-btn[data-feat="${f}"]`);
+    if(btn) chips.push({label:btn.textContent.trim(),clear:()=>{activeFeatFilters.delete(f);btn.classList.remove('on');applyFilters();}});
+  });
+  const minStroke=+document.getElementById('strokeRange').value;
+  if(minStroke>100) chips.push({label:`Хід ≥ ${minStroke}мм`,clear:()=>{document.getElementById('strokeRange').value=100;document.getElementById('strokeLbl').textContent='≥ 100мм';applyFilters();}});
+  const pMin=+document.getElementById('priceMin').value;
+  const pMax=+document.getElementById('priceMax').value;
+  if(pMin>PRICE_MIN_GLOBAL||pMax<PRICE_MAX_GLOBAL){
+    chips.push({label:`${Math.round(pMin/1000)}к–${Math.round(pMax/1000)}к ₴`,clear:()=>{document.getElementById('priceMin').value=PRICE_MIN_GLOBAL;document.getElementById('priceMax').value=PRICE_MAX_GLOBAL;updatePriceUI(PRICE_MIN_GLOBAL,PRICE_MAX_GLOBAL);applyFilters();}});
+  }
+  if(document.getElementById('filterInStock').checked) chips.push({label:'В наявності',clear:()=>{document.getElementById('filterInStock').checked=false;applyFilters();}});
+  if(document.getElementById('filterOnOrder').checked) chips.push({label:'Під замовлення',clear:()=>{document.getElementById('filterOnOrder').checked=false;applyFilters();}});
+  const q=document.getElementById('sbSearch').value;
+  if(q) chips.push({label:`Пошук: "${q}"`,clear:()=>{document.getElementById('sbSearch').value='';applyFilters();}});
+
+  bar.innerHTML=chips.map((c,i)=>
+    `<span class="af-chip">${c.label}<button class="af-chip-x" onclick="__afClear(${i})">✕</button></span>`
+  ).join('');
+  window.__afClear=(i)=>chips[i].clear();
+}
+
 function applyFilters(){
   const {suspChecked,tierChecked,q,minStroke,stockIn,stockOrder,priceMin,priceMax}=getActiveFilters();
   const sortVal=document.getElementById('sortSel').value;
@@ -851,9 +888,10 @@ function applyFilters(){
   if(q) filtered=filtered.filter(s=>(s.series+s.pn+s.app+s.suspLabel).toLowerCase().includes(q));
   filtered=filtered.filter(s=>s.stroke>=minStroke);
 
-  // Price range
-  if(priceMin>PRICE_MIN_GLOBAL||priceMax<PRICE_MAX_GLOBAL){
-    filtered=filtered.filter(s=>s.price>=priceMin&&s.price<=priceMax);
+  // Price range — seats with price=0 shown as "За запитом", excluded only if slider moved
+  const priceFiltered=priceMin>PRICE_MIN_GLOBAL||priceMax<PRICE_MAX_GLOBAL;
+  if(priceFiltered){
+    filtered=filtered.filter(s=>s.price===0||(s.price>=priceMin&&s.price<=priceMax));
   }
 
   // Stock filter
@@ -877,6 +915,7 @@ function applyFilters(){
   document.getElementById('emptyState').style.display=filtered.length?'none':'block';
   renderCards(filtered);
   if(gridMode==='list') document.getElementById('cardsGrid').classList.add('list');
+  renderActiveFilters();
 }
 
 function toggleFeat(btn){
@@ -972,11 +1011,24 @@ function renderCompare(){
 
   // Render table
   const panel=document.getElementById('cmpPanel');
-  if(compareList.length<2){panel.classList.remove('visible');panel.innerHTML='';return;}
+  if(compareList.length<2){
+    panel.classList.remove('visible');
+    panel.innerHTML='';
+    if(compareList.length===0){
+      slots.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--tx3);">
+        <div style="font-size:2rem;margin-bottom:12px;opacity:.3">⚖️</div>
+        <div style="font-size:.8rem;margin-bottom:16px">Додайте мінімум 2 моделі з каталогу для порівняння</div>
+        <button onclick="mobSetMode('catalog')" style="padding:8px 20px;border-radius:7px;border:1px solid var(--a);background:transparent;color:var(--a);font-family:'Syne',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer;">← Перейти до каталогу</button>
+      </div>`;
+    }
+    return;
+  }
   panel.classList.add('visible');
   const seats=compareList.map(id=>SEATS.find(x=>x.id===id));
   const rows=[
     {label:'Артикул',fn:s=>`<span style="font-family:'DM Mono',monospace;font-size:.65rem">${s.pn}</span>`},
+    {label:'💰 Ціна',fn:s=>s.price>0?`<b>${s.price.toLocaleString('uk-UA')} ₴</b>`:'<span style="color:var(--tx3)">За запитом</span>',diff:true},
+    {label:'📦 Наявність',fn:s=>s.inStock?'<span style="color:#10b981;font-weight:700">● В наявності</span>':'<span style="color:#fb923c;font-weight:700">○ Під замовлення</span>',diff:true},
     {label:'Підвіска',fn:s=>`<span style="color:${SUSP_COLORS[s.susp]};font-weight:600">${s.suspLabel}</span>`},
     {label:'Хід підвіски',fn:s=>`<b>${s.stroke}мм</b>`,diff:true},
     {label:'Вага оператора',fn:s=>`${s.weight[0]}–${s.weight[1]}кг`,diff:true},
@@ -1146,9 +1198,10 @@ function renderRadarView(){
   const seats=radarList.map(id=>SEATS.find(x=>x.id===id)).filter(Boolean);
   const colors=seats.map((s,i)=>RADAR_COLORS[i]);
 
+  const canvasSize=Math.min(340,window.innerWidth-80);
   box.innerHTML=`
     <div class="rad-canvas-title">${seats.map(s=>s.series).join(' · ')}</div>
-    <canvas id="bigRadarCanvas" width="340" height="340"></canvas>`;
+    <canvas id="bigRadarCanvas" width="${canvasSize}" height="${canvasSize}"></canvas>`;
 
   // Draw after DOM updates
   setTimeout(()=>{
@@ -1220,7 +1273,18 @@ function openModal(s){
         <div class="modal-feats">
           ${buildModalFeats(s)}
         </div>
-        <div style="margin-top:14px;display:flex;gap:8px">
+        <div style="margin-top:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <div style="flex:1;min-width:130px;background:var(--s2);border:1px solid var(--br);border-radius:8px;padding:10px 14px;">
+            <div style="font-size:.58rem;color:var(--tx3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Ціна</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.5px">${s.price>0?s.price.toLocaleString('uk-UA')+' ₴':'За запитом'}</div>
+            <div style="font-size:.55rem;color:var(--tx3)">${s.price>0?'орієнтовна ціна':'уточніть у менеджера'}</div>
+          </div>
+          <div style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:1px solid ${s.inStock?'rgba(16,185,129,.3)':'rgba(251,146,60,.25)'};background:${s.inStock?'rgba(16,185,129,.07)':'rgba(251,146,60,.06)'};color:${s.inStock?'#10b981':'#fb923c'};font-size:.72rem;font-weight:700;white-space:nowrap">
+            <div style="width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0"></div>
+            ${s.inStock?'В наявності':'Під замовлення'}
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px">
           <button onclick="toggleCompare('${s.id}');closeModal()" style="flex:1;padding:8px;border-radius:7px;border:1px solid ${compareList.includes(s.id)?'var(--ao)':'var(--a)'};background:transparent;color:${compareList.includes(s.id)?'var(--ao)':'var(--a)'};font-family:'Syne',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer">
             ${compareList.includes(s.id)?'✕ Видалити з порівняння':'⚖ Додати до порівняння'}
           </button>
@@ -1355,6 +1419,12 @@ document.getElementById('sbSearch').addEventListener('input',()=>{
 // ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
+(function initPriceSlider(){
+  const mn=document.getElementById('priceMin');
+  const mx=document.getElementById('priceMax');
+  mn.min=PRICE_MIN_GLOBAL; mn.max=PRICE_MAX_GLOBAL; mn.value=PRICE_MIN_GLOBAL; mn.step=Math.round((PRICE_MAX_GLOBAL-PRICE_MIN_GLOBAL)/200/100)*100||100;
+  mx.min=PRICE_MIN_GLOBAL; mx.max=PRICE_MAX_GLOBAL; mx.value=PRICE_MAX_GLOBAL; mx.step=mn.step;
+})();
 updatePriceUI(PRICE_MIN_GLOBAL, PRICE_MAX_GLOBAL);
 const mobNavCatalog=document.getElementById('mobNavCatalog');
 if(mobNavCatalog) mobNavCatalog.classList.add('active');
