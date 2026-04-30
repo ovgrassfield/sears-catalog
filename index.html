@@ -841,8 +841,8 @@ canvas.mini-radar{display:block;}
       <div class="roi-panel">
         <div class="roi-panel-title">Параметри <span>роботи</span></div>
         <div class="roi-field">
-          <div class="roi-field-head"><span class="roi-field-lbl">Кількість операторів</span><span class="roi-field-val" id="roi-lbl-ops">2</span></div>
-          <input type="range" min="1" max="20" step="1" value="2" id="roi-ops" oninput="roiCalc()">
+          <div class="roi-field-head"><span class="roi-field-lbl">Кількість операторів</span><span class="roi-field-val" id="roi-lbl-ops">1</span></div>
+          <input type="range" min="1" max="20" step="1" value="1" id="roi-ops" oninput="roiCalc()">
         </div>
         <div class="roi-field">
           <div class="roi-field-head"><span class="roi-field-lbl">Робочих днів на сезон</span><span class="roi-field-val" id="roi-lbl-days">180</span></div>
@@ -922,47 +922,37 @@ canvas.mini-radar{display:block;}
       <div class="roi-bp-row"><div class="roi-bp-icon" style="background:rgba(0,229,201,.12);border:1px solid rgba(0,229,201,.25)">✓</div><div class="roi-bp-lbl" style="color:var(--tx);font-weight:600">Чиста річна вигода</div><div class="roi-bp-val green" style="font-size:1.2rem" id="roi-b-net">₴0</div></div>
     </div>
 
-    <!-- Fatigue Curve Block -->
-    <div class="roi-fatigue-panel">
-      <div class="roi-fatigue-header">
-        <span class="roi-fatigue-title">📉 Крива втоми оператора — втрати продуктивності по годинах</span>
-        <div class="roi-fatigue-legend" id="fatigueLegend"></div>
-      </div>
-      <div class="roi-fatigue-chain">
-        <div class="roi-chain-item"><div class="roi-chain-icon">🌀</div><div class="roi-chain-lbl">Вібрації WBV</div></div>
-        <div class="roi-chain-arrow">→</div>
-        <div class="roi-chain-item"><div class="roi-chain-icon">😓</div><div class="roi-chain-lbl">Накопичена втома</div></div>
-        <div class="roi-chain-arrow">→</div>
-        <div class="roi-chain-item"><div class="roi-chain-icon">❌</div><div class="roi-chain-lbl">Помилки керування</div></div>
-        <div class="roi-chain-arrow">→</div>
-        <div class="roi-chain-item roi-chain-item-red"><div class="roi-chain-icon">🏥</div><div class="roi-chain-lbl">Лікарняні</div></div>
-        <div class="roi-chain-arrow">→</div>
-        <div class="roi-chain-item roi-chain-item-orange"><div class="roi-chain-icon">₴</div><div class="roi-chain-lbl">Фінансові втрати</div></div>
-      </div>
-      <div class="roi-fatigue-chart-wrap">
-        <canvas id="fatigueChart"></canvas>
-      </div>
-      <div class="roi-fatigue-hours-labels">
-        <span>0 год</span><span>2 год</span><span>4 год</span><span>6 год</span><span>8 год</span><span>10 год</span><span>12 год</span>
-      </div>
-      <div class="roi-fatigue-summary">
-        <div class="roi-fatigue-sum-item">
-          <span class="roi-fatigue-sum-lbl">⚠ Втрачена ефективність (стара підвіска, за зміну)</span>
-          <span class="roi-fatigue-sum-val red" id="fatigueOldLost">—</span>
-        </div>
-        <div class="roi-fatigue-sum-item">
-          <span class="roi-fatigue-sum-lbl">✓ Втрачена ефективність (нова підвіска, за зміну)</span>
-          <span class="roi-fatigue-sum-val" id="fatigueNewLost">—</span>
-        </div>
-        <div class="roi-fatigue-sum-item hl">
-          <span class="roi-fatigue-sum-lbl">💡 Збережено ефективних годин на оператора / рік</span>
-          <span class="roi-fatigue-sum-val accent" id="fatigueSaved">—</span>
-        </div>
-      </div>
-    </div>
+
 
     <div class="roi-note">Розрахунок є орієнтовним. Реальні показники залежать від умов роботи, марки техніки та кваліфікації операторів.</div>
   </div>
+
+  <!-- FOOTER -->
+  <footer style="margin-top:48px;padding:28px 24px;border-top:1px solid var(--br);background:var(--bg2);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px">
+    <div style="font-family:'Syne',sans-serif;font-size:.75rem;color:var(--tx3);letter-spacing:.08em;text-transform:uppercase">Контакти для замовлень</div>
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center">
+      <a href="mailto:ov.grassfield@gmail.com" style="display:flex;align-items:center;gap:8px;color:var(--tx2);text-decoration:none;font-family:'DM Mono',monospace;font-size:.78rem;transition:color .2s" onmouseover="this.style.color='var(--ac)'" onmouseout="this.style.color='var(--tx2)'">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        ov.grassfield@gmail.com
+      </a>
+      <a href="https://t.me/oleksandr_grassfield" target="_blank" style="display:flex;align-items:center;gap:8px;color:var(--tx2);text-decoration:none;font-family:'DM Mono',monospace;font-size:.78rem;transition:color .2s" onmouseover="this.style.color='var(--ac)'" onmouseout="this.style.color='var(--tx2)'">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.04 9.61c-.152.674-.554.838-1.123.522l-3.1-2.285-1.496 1.44c-.165.165-.304.304-.624.304l.222-3.156 5.74-5.184c.25-.222-.054-.346-.386-.124L7.16 14.37l-3.06-.956c-.666-.208-.68-.666.138-.986l11.96-4.61c.555-.2 1.04.135.863.985-.001 0-.001-.001 0 0z"/></svg>
+        @oleksandr_grassfield
+      </a>
+      <a href="tel:+380673219905" style="display:flex;align-items:center;gap:8px;color:var(--tx2);text-decoration:none;font-family:'DM Mono',monospace;font-size:.78rem;transition:color .2s" onmouseover="this.style.color='var(--ac)'" onmouseout="this.style.color='var(--tx2)'">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+        067 321 99 05
+      </a>
+      <a href="viber://chat?number=%2B380673219905" style="display:flex;align-items:center;gap:8px;color:var(--tx2);text-decoration:none;font-family:'DM Mono',monospace;font-size:.78rem;transition:color .2s" onmouseover="this.style.color='#7c3aed'" onmouseout="this.style.color='var(--tx2)'">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M11.985 0C8.89.012 4.742 1.01 2.876 4.687 1.698 7.076 1.657 10.14 2.63 12.7c.604 1.59 1.737 2.96 3.085 3.982l-.42 3.11a.4.4 0 0 0 .574.407l3.177-1.59c.79.22 1.6.35 2.418.39.23.012.46.017.688.017 3.097-.012 7.244-1.01 9.11-4.687C22.44 11.94 22.44 7.87 20.263 5.37 18.5 3.34 15.422 1.99 11.985 0zm.015 1.5c3.09.01 5.785 1.226 7.338 3.014 1.879 2.18 1.879 5.716.157 8.636-1.55 2.826-5.178 3.605-7.495 3.614-.23 0-.455-.005-.68-.016a11.2 11.2 0 0 1-2.402-.41.75.75 0 0 0-.492.033l-2.19 1.095.29-2.142a.75.75 0 0 0-.286-.676c-1.24-.884-2.27-2.1-2.797-3.5-.845-2.22-.772-4.846.21-6.848C5.17 2.47 8.726 1.49 12 1.5zm-2.27 3.257c-.22-.003-.448.074-.615.24-.44.44-.867.976-.93 1.576-.064.6.181 1.137.524 1.6.956 1.288 2.106 2.437 3.394 3.394.462.343 1 .588 1.6.524.6-.063 1.135-.49 1.575-.93.38-.38.38-.995 0-1.375l-1.39-1.39a.972.972 0 0 0-1.376 0l-.34.34a.23.23 0 0 1-.283.032 6.37 6.37 0 0 1-1.817-1.817.23.23 0 0 1 .032-.283l.34-.34a.972.972 0 0 0 0-1.375l-1.39-1.39a.972.972 0 0 0-.324-.196.972.972 0 0 0-.001-.6z"/></svg>
+        Viber
+      </a>
+      <a href="https://wa.me/380673219905" target="_blank" style="display:flex;align-items:center;gap:8px;color:var(--tx2);text-decoration:none;font-family:'DM Mono',monospace;font-size:.78rem;transition:color .2s" onmouseover="this.style.color='#22c55e'" onmouseout="this.style.color='var(--tx2)'">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </footer>
 
   <!-- COMPARE -->
   <div id="compareView" style="display:none">
@@ -1808,7 +1798,6 @@ function cancelRoiPick(){
 // ROI CALCULATOR
 // ═══════════════════════════════════════════
 let roiChart=null;
-let fatigueChart=null;
 let roiSelectedSeat=null;
 
 // Research-backed productivity benchmarks per suspension type
@@ -1918,7 +1907,6 @@ function roiCalc(){
   document.getElementById('roi-pb-text').textContent=paybackM<120?'Окупність за '+Math.round(paybackM)+' міс.':'Понад 10 років';
 
   roiUpdateChart(totalInvest,totalSave);
-  updateFatigueChart();
 }
 
 function roiUpdateChart(invest,annualSave){
@@ -1972,110 +1960,91 @@ function roiFromCard(id,e){
 }
 
 // ═══════════════════════════════════════════
-// FATIGUE CURVE CHART
-// Vibrations → Fatigue → Productivity loss per hour
+// FATIGUE CURVE CHART — науково обґрунтована версія v2
+// Vibrations → Fatigue → Operator efficiency loss per hour
+//
+// ДЖЕРЕЛА (peer-reviewed):
+//
+// [1] Motmans R. (2012). "Reducing whole body vibration in forklift drivers."
+//     Work, 41(S1):2476–2481. DOI:10.3233/WOR-2012-0484-2476  [PubMed 22317090]
+//     Єдине верифіковане вимірювання: повітряна підвіска знижує WBV
+//     на 22% порівняно з механічною (1.02 → 0.80 м/с², n=5 водіїв).
+//
+// [2] Corbeil P. et al. (2023). "The effect of selected rest break activities
+//     on reaction time... after one hour of simulated occupational WBV exposure."
+//     PMC10424600. DOI:10.1016/j.apergo.2023.104064
+//     Після 1 год WBV найповільніші 10% реакцій деградують на ~8.6%.
+//
+// [3] ISO 2631-1:1997. Примітка: концепція «кордонів зниження продуктивності
+//     через втому» (Fatigue-Decreased Proficiency Boundaries) ВИДАЛЕНА
+//     з версії 1997 р., оскільки «не підтверджувалась дослідженнями».
+//
+// [4] Huysmans M.A. et al. (2024). Systematic review: "The after-effects of
+//     occupational WBV on human cognitive, visual, and motor function."
+//     Applied Ergonomics, 118. DOI:10.1016/j.apergo.2024.104253
+//     Висновок: ефект WBV на когніцію — непослідовний; немає доказів
+//     різкого падіння на 40% за зміну, як припускали маркетингові моделі.
+//
+// МОДЕЛЬ (калібрована до [2]):
+//   drop(t) = maxDrop_wbv1 × wbvR × (1 − exp(−k × t))
+//   де:
+//     maxDrop_wbv1 = 0.10  (плато ~10% для мех.базової — [2] дає 8.6% за 1 год)
+//     k            = 0.35  год⁻¹ (помірне накопичення без штучного прискорення)
+//     wbvR         = відносний WBV-коефіцієнт (тільки 2 науково підтверджені рівні)
+//     floor        = 0.90  (мінімум ефективності — не 0.60, як у попередній версії!)
+//
+// ВАЖЛИВЕ ОБМЕЖЕННЯ:
+//   Пряме кількісне перетворення WBV → % продуктивності відсутнє в
+//   peer-reviewed літературі. Ця модель — консервативна апроксимація
+//   на основі найближчого доступного показника: деградації часу реакції [2].
+//   Диференціація між моделями вищого класу (LNF, VIS, ActiveVRS) науково
+//   не верифікована — вони згруповані в категорію "повітряна/активна".
 // ═══════════════════════════════════════════
+
 function getFatigueCurve(suspType, totalHrs){
-  // Fatigue accumulation model:
-  // Each suspension type has a WBV reduction factor.
-  // Old seat (mech baseline): productivity starts at 100%, drops linearly+accelerating with fatigue.
-  // Better seat: slower fatigue accumulation, less drop.
-  const wbvFactors={mech:1.0,cmech:0.85,cair:0.70,lnf:0.50,wide:0.45,vis:0.42,avrs:0.37};
-  const wbv=wbvFactors[suspType]||1.0;
-  // Gompertz-like fatigue: eff(t) = 1 - fatigueDepth * (1 - e^(-k*wbv*t))^2
-  // fatigue starts slow, accelerates after hour 4, then flattens
+
+  // Науково обґрунтовані WBV-категорії:
+  // Тільки два рівні мають реальні вимірювальні дані [1]:
+  //   'mech'   → механічна підвіска (базова, wbvR = 1.00)
+  //   'air'    → будь-яка повітряна підвіска (wbvR = 0.78, тобто −22% за [1])
+  //   'active' → активна MR-підвіска (wbvR ≈ 0.65, ОЦІНКА — peer-review відсутній)
+  //
+  // cmech не має окремих вимірювальних даних → прирівняна до mech.
+  // LNF/Wide/VIS/ActiveVRS не диференційовані науково → air або active клас.
+
+  const wbvMap={
+    mech:  1.00,   // [1] базова лінія
+    cmech: 1.00,   // немає окремих даних → = mech
+    cair:  0.78,   // [1] −22%
+    lnf:   0.78,   // [1] повітряна клас
+    wide:  0.78,   // [1] повітряна клас
+    vis:   0.65,   // оцінка активний клас — НЕ peer-reviewed
+    avrs:  0.65,   // оцінка активний клас — НЕ peer-reviewed
+  };
+  const wbvR = wbvMap[suspType] || 1.00;
+
+  // Параметри моделі (калібровані до [2]):
+  const maxDrop = 0.10 * wbvR;  // плато масштабується пропорційно WBV
+  const k       = 0.35;          // год⁻¹
+  const floor   = 0.90;          // мінімум 90% — обґрунтований даними [2],[4]
+
   const pts=[];
   const hours=Math.max(8, totalHrs);
   for(let h=0;h<=hours;h+=0.5){
-    const fatigueFactor=1-Math.exp(-0.12*wbv*h);
-    const drop=0.28*wbv*(fatigueFactor*fatigueFactor); // max ~28% drop for mech
-    const eff=Math.max(0.60, 1.0-drop);
+    const drop = maxDrop * (1 - Math.exp(-k * h));
+    const eff  = Math.max(floor, 1.0 - drop);
     pts.push(+(eff*100).toFixed(1));
   }
   return pts;
 }
 
-function updateFatigueChart(){
-  const hrs=+document.getElementById('roi-hrs').value;
-  const ops=+document.getElementById('roi-ops').value;
-  const days=+document.getElementById('roi-days').value;
-  const wage=+document.getElementById('roi-wage').value;
-
-  // Determine selected suspension type from active button
-  const activeBtn=document.querySelector('.roi-susp-btn.active');
-  const newSusp=activeBtn?activeBtn.dataset.susp:'lnf';
-
-  const oldCurve=getFatigueCurve('mech',hrs);
-  const newCurve=getFatigueCurve(newSusp,hrs);
-
-  // Build labels: every 0.5 hr step up to hrs
-  const labels=[];
-  for(let h=0;h<=hrs;h+=0.5) labels.push(h%2===0?h+'год':'');
-
-  // Calculate lost effective hours per shift
-  const steps=hrs*2; // 0.5h steps
-  let oldLost=0,newLost=0;
-  for(let i=0;i<=steps;i++){
-    oldLost+=(1-(oldCurve[i]||oldCurve[oldCurve.length-1])/100)*0.5;
-    newLost+=(1-(newCurve[i]||newCurve[newCurve.length-1])/100)*0.5;
-  }
-  const savedHrsPerYear=(oldLost-newLost)*ops*days;
-
-  document.getElementById('fatigueOldLost').textContent=oldLost.toFixed(1)+' год/зміну';
-  document.getElementById('fatigueNewLost').textContent=newLost.toFixed(1)+' год/зміну';
-  document.getElementById('fatigueSaved').textContent=Math.round(savedHrsPerYear)+' год/рік ('+roiUah(savedHrsPerYear*wage)+')';
-
-  // Legend
-  const suspNames={mech:'Механічна',cmech:'Компакт.мех.',cair:'Compact Air',lnf:'LNF Air',wide:'Extra Wide LNF',vis:'VIS Ultra-LNF',avrs:'ActiveVRS'};
-  const suspColors={mech:'#64748b',cmech:'#3b82f6',cair:'#06b6d4',lnf:'#10b981',wide:'#14b8a6',vis:'#a78bfa',avrs:'#f87171'};
-  const leg=document.getElementById('fatigueLegend');
-  if(leg) leg.innerHTML=`
-    <div class="roi-fatigue-leg"><div class="roi-fatigue-leg-dot" style="background:#64748b"></div>Механічна (базова)</div>
-    <div class="roi-fatigue-leg"><div class="roi-fatigue-leg-dot" style="background:${suspColors[newSusp]||'#00e5c9'}"></div>${suspNames[newSusp]||newSusp}</div>`;
-
-  const gridCol='rgba(28,33,48,.8)';
-  const tickCol='#3a4560';
-
-  if(fatigueChart){
-    fatigueChart.data.labels=labels;
-    fatigueChart.data.datasets[0].data=oldCurve.slice(0,labels.length);
-    fatigueChart.data.datasets[1].data=newCurve.slice(0,labels.length);
-    fatigueChart.data.datasets[1].label=suspNames[newSusp]||newSusp;
-    fatigueChart.data.datasets[1].borderColor=suspColors[newSusp]||'#00e5c9';
-    fatigueChart.data.datasets[1].backgroundColor=(suspColors[newSusp]||'#00e5c9')+'14';
-    fatigueChart.update();
-    return;
-  }
-  const canvas=document.getElementById('fatigueChart');
-  if(!canvas) return;
-  fatigueChart=new Chart(canvas,{
-    type:'line',
-    data:{
-      labels,
-      datasets:[
-        {label:'Механічна (базова)',data:oldCurve.slice(0,labels.length),borderColor:'#64748b',backgroundColor:'rgba(100,116,139,0.06)',borderWidth:2,pointRadius:0,fill:true,tension:0.4,borderDash:[5,3]},
-        {label:suspNames[newSusp]||newSusp,data:newCurve.slice(0,labels.length),borderColor:suspColors[newSusp]||'#00e5c9',backgroundColor:(suspColors[newSusp]||'#00e5c9')+'14',borderWidth:2.5,pointRadius:0,fill:true,tension:0.4}
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{display:false},
-        tooltip:{backgroundColor:'#0d1018',borderColor:'#1c2130',borderWidth:1,titleColor:'#7a8ba8',bodyColor:'#d8e0f0',titleFont:{family:'Syne',size:10},bodyFont:{family:'DM Mono',size:12},padding:10,
-          callbacks:{
-            title:items=>'Година '+items[0].label.replace('год',''),
-            label:ctx=>ctx.dataset.label+':  '+ctx.parsed.y.toFixed(1)+'% ефективності'
-          }
-        }
-      },
-      scales:{
-        x:{ticks:{color:tickCol,font:{family:'Syne',size:9},autoSkip:true,maxTicksLimit:8,maxRotation:0,callback:(v,i,all)=>all[i].label||''},grid:{color:gridCol}},
-        y:{min:55,max:100,ticks:{color:tickCol,font:{family:'Syne',size:10},callback:v=>v+'%'},grid:{color:gridCol},title:{display:true,text:'Ефективність оператора, %',color:'#364257',font:{family:'Syne',size:9}}}
-      }
-    }
-  });
+// Допоміжна функція: смуга невизначеності ±2% (відображає реальний розкид даних [2],[4])
+function getFatigueBand(suspType, totalHrs, delta){
+  const curve = getFatigueCurve(suspType, totalHrs);
+  return curve.map(v => +(Math.min(100, Math.max(88, v + delta)).toFixed(1)));
 }
+
+
 
 // ═══════════════════════════════════════════
 // MOBILE HELPERS
@@ -2132,4 +2101,3 @@ applyFilters();
 </script>
 </body>
 </html>
-
